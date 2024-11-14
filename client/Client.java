@@ -8,16 +8,25 @@ public class Client {
 
     public static void main(String args[]) throws IOException {
         Client c = new Client();
+        c.connect();
 
         c.close();
     }
 
-    public Client() throws IOException {
-        socket = new Socket("localhost", SERVER_PORT);
-        System.out.println("Server socket created on port " + SERVER_PORT);
+    public void connect() throws IOException {
+        try {
+            socket = new Socket("localhost", SERVER_PORT);
+        } catch (ConnectException e) {
+            System.out.println("Could not connect to server");
+            return;
+        }
+        System.out.println("Socket created on port " + SERVER_PORT);
     }
 
     public void close() throws IOException {
-        socket.close();
+        if(socket != null){
+            socket.close();
+            System.out.println("Closed socket");
+        }
     }
 }

@@ -10,7 +10,7 @@ public class Server {
 
     public static void main(String args[]) throws IOException {
         Server s = new Server();
-        
+        s.awaitClient();
         s.close();
     }
 
@@ -20,12 +20,17 @@ public class Server {
     }
 
     public void awaitClient() throws IOException {
+        System.out.println("Awaiting client...");
         client = server.accept();
         System.out.println("Client socket conected");
     }
 
     public void close() throws IOException {
-        client.close();
+        if(client != null) {
+            client.close();
+            System.out.println("Client socket closed");
+        }
         server.close();
+        System.out.println("Server socket closed");
     }
 }
