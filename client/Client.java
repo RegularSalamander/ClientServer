@@ -5,7 +5,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 
 public class Client {
-    private static int SERVER_PORT = 8193;
+    private static int SERVER_PORT = 5193;
 
     private String server_ip;
     private Socket socket;
