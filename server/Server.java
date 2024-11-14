@@ -11,6 +11,7 @@ public class Server {
     public static void main(String args[]) throws IOException {
         Server s = new Server();
         
+        s.close();
     }
 
     public Server() throws IOException {
