@@ -15,11 +15,23 @@ public class Server {
         Server s = new Server();
         s.awaitClient();
 
-        System.out.println(s.receive());
+        s.send("Server of Cameron Kelly");
+        s.send(String.valueOf(SERVER_NUM));
+
         System.out.println(s.receive());
 
-        s.send("Server of Cameron Kelly");
-        s.send("hehe!");
+        int num = -1;
+        String client_num = s.receive();
+        try {
+            num = Integer.parseInt(client_num);
+        } catch(NumberFormatException e) {
+            System.out.println("Client sent an invalid number");
+            s.close();
+            System.exit(1);
+        }
+
+        System.out.println("Client number: " + num);
+        System.out.println(SERVER_NUM + " + " + num + " = " + (num+SERVER_NUM));
 
         s.close();
     }
