@@ -71,7 +71,7 @@ public class Server {
             log("Client socket closed");
         }
         server.close();
-        log("Server socket closed");
+        log("Server socket closed\n");
     }
 
     public static void log(String message) {
@@ -83,7 +83,7 @@ public class Server {
             LocalDateTime now = LocalDateTime.now();
             String time = "[" + now.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")) + "] ";
             if(time.equals(lastLogTime)) time = "                      ";
-            lastLogTime = time;
+            else lastLogTime = time;
 
             writer.write(time + message + "\n");
 
