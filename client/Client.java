@@ -69,7 +69,7 @@ public class Client {
         try {
             socket = new Socket(server_ip, SERVER_PORT);
         } catch (ConnectException e) {
-            log("Could not connect to server");
+            log("Could not connect to server\n");
             System.exit(1);
         }
 
