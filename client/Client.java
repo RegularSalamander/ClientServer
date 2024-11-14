@@ -1,13 +1,14 @@
 import java.io.*;
 import java.net.*;
-import java.util.InputMismatchException;
 import java.util.Scanner;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 public class Client {
-    private static int SERVER_PORT = 5193;
+    private static final int SERVER_PORT = 5193;
 
     private String server_ip;
     private Socket socket;
@@ -15,13 +16,15 @@ public class Client {
     private PrintWriter out;
     private BufferedReader in;
 
+    private static String lastLogTime;
+
     public static void main(String args[]) throws IOException {
         Client c = new Client();
         c.connect();
 
         c.send("Client of Cameron Kelly");
 
-        System.out.println(c.receive());
+        c.receive();
 
         int num = -1;
 
@@ -59,33 +62,55 @@ public class Client {
     }
 
     public void connect() throws IOException {
+        log("Obtaining server ip...");
         server_ip = new String(Files.readAllBytes(Paths.get("serverip.txt")), StandardCharsets.UTF_8);
+        log("Attempting to connect to server ip " + server_ip);
 
         try {
             socket = new Socket(server_ip, SERVER_PORT);
         } catch (ConnectException e) {
-            System.out.println("Could not connect to server");
+            log("Could not connect to server");
             System.exit(1);
         }
 
         in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
         out = new PrintWriter(socket.getOutputStream(), true);
 
-        System.out.println("Socket created on port " + SERVER_PORT);
+        log("Socket created on port " + SERVER_PORT);
     }
 
     public void send(String message) {
         out.println(message);
+        log("Sent message: '" + message + "'");
     }
 
     public String receive() throws IOException {
-        return in.readLine();
+        String message = in.readLine();
+        log("Received message: '" + message + "'");
+        return message;
     }
 
     public void close() throws IOException {
         if(socket != null){
             socket.close();
-            System.out.println("Closed socket");
+            log("Closed socket\n");
         }
+    }
+
+    public static void log(String message) {
+        System.out.println(message);
+
+        try{
+            BufferedWriter writer = new BufferedWriter(new FileWriter("client/log.txt", true));
+
+            LocalDateTime now = LocalDateTime.now();
+            String time = "[" + now.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")) + "] ";
+            if(time.equals(lastLogTime)) time = "                      ";
+            lastLogTime = time;
+
+            writer.write(time + message + "\n");
+
+            writer.close();
+        } catch(IOException e) {}
     }
 }

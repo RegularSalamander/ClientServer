@@ -1,15 +1,19 @@
 import java.io.*;
 import java.net.*;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 public class Server {
-    private static int SERVER_PORT = 5193;
-    private static int SERVER_NUM = 84;
+    private static final int SERVER_PORT = 5193;
+    private static final int SERVER_NUM = 84;
 
     private ServerSocket server;
     private Socket client;
 
     private PrintWriter out;
     private BufferedReader in;
+
+    private static String lastLogTime;
 
     public static void main(String args[]) throws IOException {
         Server s = new Server();
@@ -18,7 +22,7 @@ public class Server {
         s.send("Server of Cameron Kelly");
         s.send(String.valueOf(SERVER_NUM));
 
-        System.out.println(s.receive());
+        s.receive();
 
         int num = -1;
         String client_num = s.receive();
@@ -38,13 +42,13 @@ public class Server {
 
     public Server() throws IOException {
         server = new ServerSocket(SERVER_PORT);
-        System.out.println("Server socket crted on port " + SERVER_PORT);
+        log("Server socket created on port " + SERVER_PORT);
     }
 
     public void awaitClient() throws IOException {
-        System.out.println("Awaiting client...");
+        log("Awaiting client...");
         client = server.accept();
-        System.out.println("Client socket conected");
+        log("Client socket conected");
 
         in = new BufferedReader(new InputStreamReader(client.getInputStream()));
         out = new PrintWriter(client.getOutputStream(), true);
@@ -52,18 +56,38 @@ public class Server {
 
     public void send(String message) {
         out.println(message);
+        log("Sent message: '" + message + "'");
     }
 
     public String receive() throws IOException {
-        return in.readLine();
+        String message = in.readLine();
+        log("Received message: '" + message + "'");
+        return message;
     }
 
     public void close() throws IOException {
         if(client != null) {
             client.close();
-            System.out.println("Client socket closed");
+            log("Client socket closed");
         }
         server.close();
-        System.out.println("Server socket closed");
+        log("Server socket closed");
+    }
+
+    public static void log(String message) {
+        System.out.println(message);
+
+        try{
+            BufferedWriter writer = new BufferedWriter(new FileWriter("server/log.txt", true));
+
+            LocalDateTime now = LocalDateTime.now();
+            String time = "[" + now.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")) + "] ";
+            if(time.equals(lastLogTime)) time = "                      ";
+            lastLogTime = time;
+
+            writer.write(time + message + "\n");
+
+            writer.close();
+        } catch(IOException e) {}
     }
 }
