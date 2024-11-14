@@ -2,7 +2,7 @@ import java.io.*;
 import java.net.*;
 
 public class Server {
-    private static int SERVER_PORT = 8193;
+    private static int SERVER_PORT = 5193;
     private static int SERVER_NUM = 84;
 
     private ServerSocket server;
@@ -16,7 +16,7 @@ public class Server {
 
     public Server() throws IOException {
         server = new ServerSocket(SERVER_PORT);
-        System.out.println("Server socket created on port " + SERVER_PORT);
+        System.out.println("Server socket crted on port " + SERVER_PORT);
     }
 
     public void awaitClient() throws IOException {
