@@ -50,13 +50,13 @@ public class Client {
         try {
             server_num = Integer.parseInt(response);
         } catch(NumberFormatException e) {
-            System.out.println("Server sent an invalid number");
+            log("Server sent an invalid number");
             c.close();
             System.exit(1);
         }
 
         System.out.println("Server number: " + server_num);
-        System.out.println(num + " + " + server_num + " = " + (num+server_num));
+        log(num + " + " + server_num + " = " + (num+server_num));
 
         c.close();
     }

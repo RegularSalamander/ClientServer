@@ -29,13 +29,13 @@ public class Server {
         try {
             num = Integer.parseInt(client_num);
         } catch(NumberFormatException e) {
-            System.out.println("Client sent an invalid number");
+            log("Client sent an invalid number");
             s.close();
             System.exit(1);
         }
 
         System.out.println("Client number: " + num);
-        System.out.println(SERVER_NUM + " + " + num + " = " + (num+SERVER_NUM));
+        log(SERVER_NUM + " + " + num + " = " + (num+SERVER_NUM));
 
         s.close();
     }
@@ -48,7 +48,7 @@ public class Server {
     public void awaitClient() throws IOException {
         log("Awaiting client...");
         client = server.accept();
-        log("Client socket conected");
+        log("Client socket connected");
 
         in = new BufferedReader(new InputStreamReader(client.getInputStream()));
         out = new PrintWriter(client.getOutputStream(), true);
